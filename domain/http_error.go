@@ -1,16 +1,18 @@
 package domain
 
-import "github.com/gin-gonic/gin"
+type ErrorCode string
 
-func NewError(ctx *gin.Context, status int, err error) {
-	er := HTTPError{
-		Code:    status,
-		Message: err.Error(),
-	}
-	ctx.JSON(status, er)
-}
+const (
+	InvalidRequest       ErrorCode = "invalid_request"
+	InvalidClient        ErrorCode = "invalid_client"
+	InvalidGrant         ErrorCode = "invalid_grant"
+	UnauthorizedClient   ErrorCode = "unauthorized_client"
+	UnsupportedGrantType ErrorCode = "unsupported_grant_type"
+	InvalidScope         ErrorCode = "invalid_scope"
+)
 
 type HTTPError struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	Error            ErrorCode `json:"error"`
+	ErrorDescription string    `json:"error_description"`
+	ErrorUri         string    `json:"error_uri"`
 }

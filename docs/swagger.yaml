@@ -5,6 +5,60 @@ definitions:
 info:
   contact: {}
 paths:
+  /authorize:
+    get:
+      description: get authorize
+      parameters:
+      - description: code for Authorization Code Grant
+        enum:
+        - code
+        in: query
+        name: response_type
+        required: true
+        type: string
+      - description: OAuth 2.0 Client Identifier valid at the Authorization Server.
+        in: query
+        name: client_id
+        required: true
+        type: string
+      - description: Redirection URI to which the response will be sent.
+        in: query
+        name: redirect_uri
+        required: true
+        type: string
+      - description: OpenID Connect requests MUST contain the openid scope value.
+        in: query
+        name: scope
+        required: true
+        type: string
+      - description: Opaque value used to maintain state between the request and the
+          callback.
+        in: query
+        name: state
+        required: true
+        type: string
+      - description: https://datatracker.ietf.org/doc/html/rfc7636
+        in: query
+        name: code_challenge
+        required: true
+        type: string
+      - description: https://datatracker.ietf.org/doc/html/rfc7636
+        enum:
+        - S256
+        in: query
+        name: code_challenge_method
+        required: true
+        type: string
+      responses:
+        "302":
+          description: Found
+          headers:
+            Location:
+              description: https://client.example.org/cb?code=SplxlOBeZQQYbYS6WxSbIA&state=af0ifjsldkj
+              type: string
+      summary: get authorize
+      tags:
+      - authorize
   /health:
     get:
       consumes:

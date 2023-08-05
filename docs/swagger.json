@@ -5,6 +5,83 @@
     },
     "basePath": "/v1",
     "paths": {
+        "/authorize": {
+            "get": {
+                "description": "get authorize",
+                "tags": [
+                    "authorize"
+                ],
+                "summary": "get authorize",
+                "parameters": [
+                    {
+                        "enum": [
+                            "code"
+                        ],
+                        "type": "string",
+                        "description": "code for Authorization Code Grant",
+                        "name": "response_type",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OAuth 2.0 Client Identifier valid at the Authorization Server.",
+                        "name": "client_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Redirection URI to which the response will be sent.",
+                        "name": "redirect_uri",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OpenID Connect requests MUST contain the openid scope value.",
+                        "name": "scope",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Opaque value used to maintain state between the request and the callback.",
+                        "name": "state",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "https://datatracker.ietf.org/doc/html/rfc7636",
+                        "name": "code_challenge",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "S256"
+                        ],
+                        "type": "string",
+                        "description": "https://datatracker.ietf.org/doc/html/rfc7636",
+                        "name": "code_challenge_method",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Found",
+                        "headers": {
+                            "Location": {
+                                "type": "string",
+                                "description": "https://client.example.org/cb?code=SplxlOBeZQQYbYS6WxSbIA\u0026state=af0ifjsldkj"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "get health",
