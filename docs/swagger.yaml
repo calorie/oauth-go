@@ -1,0 +1,23 @@
+basePath: /v1
+definitions:
+  domain.HTTPEmpty:
+    type: object
+info:
+  contact: {}
+paths:
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: get health
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.HTTPEmpty'
+      summary: get health
+      tags:
+      - health
+swagger: "2.0"
