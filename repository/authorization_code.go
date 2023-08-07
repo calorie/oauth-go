@@ -17,7 +17,14 @@ func NewAuthorizationCodeRepositoty(db *gorm.DB) *AuthorizationCodeRepository {
 	}
 }
 
-func (r *AuthorizationCodeRepository) CreateAuthorizationCode(code string) *gorm.DB {
-	expiredAt := time.Now().Add(10 * time.Minute)
-	return r.db.Create(&domain.AuthorizationCode{Code: code, ExpiredAt: expiredAt})
+func (r *AuthorizationCodeRepository) CreateAuthorizationCode(code string, userId string, clientId string, scope string, redirectUri string) *gorm.DB {
+	ac := domain.AuthorizationCode{
+		Code: code,
+		UserId: userId,
+		ClientId: clientId,
+		Scope: scope,
+		RedirectUri: redirectUri,
+		ExpiredAt: time.Now().Add(10 * time.Minute),
+	}
+	return r.db.Create(&ac)
 }

@@ -2,3 +2,4 @@ export MYSQL_ROOT_PASSWORD=
 export MYSQL_DATABASE=oauth
 export MYSQL_USER=api
 export MYSQL_PASSWORD=
+export SESSION_SECRET=

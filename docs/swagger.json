@@ -3,7 +3,6 @@
     "info": {
         "contact": {}
     },
-    "basePath": "/v1",
     "paths": {
         "/authorize": {
             "get": {
@@ -70,6 +69,40 @@
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/decision": {
+            "post": {
+                "description": "get decision",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "tags": [
+                    "decision"
+                ],
+                "summary": "get decision",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "email",
+                        "description": "email",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "password",
+                        "name": "password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
                     "302": {
                         "description": "Found",
                         "headers": {
@@ -82,7 +115,7 @@
                 }
             }
         },
-        "/health": {
+        "/v1/health": {
             "get": {
                 "description": "get health",
                 "consumes": [

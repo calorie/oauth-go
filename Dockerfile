@@ -13,5 +13,6 @@ RUN CGO_ENABLED=0 go build -o /main
 FROM gcr.io/distroless/static-debian11
 
 COPY --from=build /main /
+COPY --from=build /app/templates /templates
 
 CMD ["/main"]

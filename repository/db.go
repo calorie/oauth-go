@@ -20,7 +20,7 @@ func InitDb() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	err = db.AutoMigrate(&domain.AuthorizationCode{}, &domain.CodeChallenge{})
+	err = db.AutoMigrate(&domain.AuthorizationCode{}, &domain.CodeChallenge{}, &domain.User{})
 	if err != nil {
 		return nil, err
 	}

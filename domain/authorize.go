@@ -20,9 +20,7 @@ type AuthorizeRequest struct {
 	CodeChallengeMethod CodeChallengeMethodType `form:"code_challenge_method" binding:"required"`
 }
 
-type Authorize struct {
-	Location string
-}
+type Authorize struct {}
 
 func (r *AuthorizeRequest) ResponseTypeCode() bool {
 	return r.ResponseType == ResponseTypeCode

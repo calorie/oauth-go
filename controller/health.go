@@ -19,7 +19,7 @@ func NewHealthController() *HealthController {
 // @Accept      json
 // @Produce     json
 // @Success     204 {object} domain.HTTPEmpty
-// @Router      /health [get]
+// @Router      /v1/health [get]
 func (ac *HealthController) GetHealth(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }

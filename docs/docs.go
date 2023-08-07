@@ -81,6 +81,40 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/decision": {
+            "post": {
+                "description": "get decision",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "tags": [
+                    "decision"
+                ],
+                "summary": "get decision",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "email",
+                        "description": "email",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "password",
+                        "name": "password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
                     "302": {
                         "description": "Found",
                         "headers": {
@@ -93,7 +127,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/health": {
+        "/v1/health": {
             "get": {
                 "description": "get health",
                 "consumes": [
@@ -128,7 +162,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "",
 	Host:             "",
-	BasePath:         "/v1",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "",
 	Description:      "",

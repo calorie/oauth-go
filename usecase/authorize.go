@@ -2,30 +2,27 @@ package usecase
 
 import (
 	"errors"
-	"net/url"
 
 	"github.com/calorie/oauth-go/domain"
 	"github.com/calorie/oauth-go/repository"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type AuthorizeUsecase struct {
-	cr  *repository.ClientRepository
-	acr *repository.AuthorizationCodeRepository
-	ccr *repository.CodeChallengeRepository
+	cr *repository.ClientRepository
+	sr *repository.ScopeRepository
 }
 
-func NewAuthorizeUsecase(cr *repository.ClientRepository, acr *repository.AuthorizationCodeRepository, ccr *repository.CodeChallengeRepository) *AuthorizeUsecase {
+func NewAuthorizeUsecase(cr *repository.ClientRepository, sr *repository.ScopeRepository) *AuthorizeUsecase {
 	return &AuthorizeUsecase{
 		cr: cr,
-		acr: acr,
-		ccr: ccr,
+		sr: sr,
 	}
 }
 
 func (u *AuthorizeUsecase) GetAuthorize(c *gin.Context, r *domain.AuthorizeRequest) (*domain.Authorize, error) {
-	client, err := domain.FindClient(r.ClientId)
+	client, err := u.cr.FindClient(r.ClientId)
 	if err != nil {
 		return nil, err
 	}
@@ -43,33 +40,16 @@ func (u *AuthorizeUsecase) GetAuthorize(c *gin.Context, r *domain.AuthorizeReque
 		return nil, errors.New("code_challenge_method is wrong")
 	}
 
-	domain.FilterScope(r.Scope)
+	scopes := u.sr.FilterScope(r.Scope)
 
-	code := uuid.NewString()
-	db := u.acr.CreateAuthorizationCode(code)
-	if db.Error != nil {
-		return nil, db.Error
-	}
+	session := sessions.Default(c)
+	session.Set("client_id", client.ClientId)
+	session.Set("state", r.State)
+	session.Set("scope", u.sr.JoinScopes(scopes))
+	session.Set("redirect_uri", uri)
+	session.Set("code_challenge", r.CodeChallenge)
+	session.Set("code_challenge_method", r.CodeChallengeMethod)
+	session.Save()
 
-	db = u.ccr.CreateCodeChallenge(code, r.CodeChallenge, r.CodeChallengeMethod)
-	if db.Error != nil {
-		return nil, db.Error
-	}
-
-	a := &domain.Authorize{Location: u.location(uri, code, r.State)}
-	return a, nil
-}
-
-func (u *AuthorizeUsecase) location(uri string, code string, state string) string {
-	url, err := url.Parse(uri)
-	if err != nil {
-		panic("can't parse uri")
-	}
-
-	q := url.Query()
-	q.Set("code", code)
-	q.Set("state", state)
-	url.RawQuery = q.Encode()
-
-	return url.String()
+	return &domain.Authorize{}, nil
 }

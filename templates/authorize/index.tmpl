@@ -1,0 +1,17 @@
+{{ define "authorize/index.tmpl" }}
+<html>
+  <form action="/decision" method="post">
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" name="email" />
+  </div>
+
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" name="password" />
+  </div>
+
+  <input type="submit" value="Sign in" />
+  </form>
+</html>
+{{ end }}

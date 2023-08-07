@@ -29,8 +29,7 @@ func NewAuthorizeController(u *usecase.AuthorizeUsecase) *AuthorizeController {
 // @Param       state                 query string true "Opaque value used to maintain state between the request and the callback."
 // @Param       code_challenge        query string true "https://datatracker.ietf.org/doc/html/rfc7636"
 // @Param       code_challenge_method query string true "https://datatracker.ietf.org/doc/html/rfc7636" Enums(S256)
-// @Success     302
-// @Header      302 {string} Location "https://client.example.org/cb?code=SplxlOBeZQQYbYS6WxSbIA&state=af0ifjsldkj"
+// @Success     200
 // @Router      /authorize [get]
 func (ac *AuthorizeController) GetAuthorize(c *gin.Context) {
 	var r domain.AuthorizeRequest
@@ -41,11 +40,11 @@ func (ac *AuthorizeController) GetAuthorize(c *gin.Context) {
 		return
 	}
 
-	a, err := ac.u.GetAuthorize(c, &r)
+	_, err = ac.u.GetAuthorize(c, &r)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.HTTPError{Error: domain.InvalidRequest, ErrorDescription: err.Error()})
 		return
 	}
 
-	c.Redirect(http.StatusFound, a.Location)
+	c.HTML(http.StatusOK, "authorize/index.tmpl", gin.H{})
 }
