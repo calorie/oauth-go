@@ -71,6 +71,12 @@
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
                     }
                 }
             }
@@ -111,6 +117,74 @@
                                 "description": "https://client.example.org/cb?code=SplxlOBeZQQYbYS6WxSbIA\u0026state=af0ifjsldkj"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/token": {
+            "post": {
+                "description": "post token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "token"
+                ],
+                "summary": "post token",
+                "parameters": [
+                    {
+                        "enum": [
+                            "authorization_code"
+                        ],
+                        "type": "string",
+                        "description": "Value MUST be set to authorization_code",
+                        "name": "grant_type",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "The authorization code received from the authorization server",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "if the redirect_uri parameter was included in the authorization request as described in Section 4.1.1, and their values MUST be identical.",
+                        "name": "redirect_uri",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "if the client is not authenticating with the authorization server as described in Section 3.2.1",
+                        "name": "client_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Token"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
                     }
                 }
             }
@@ -140,8 +214,58 @@
         }
     },
     "definitions": {
+        "domain.ErrorCode": {
+            "type": "string",
+            "enum": [
+                "invalid_request",
+                "invalid_client",
+                "invalid_grant",
+                "unauthorized_client",
+                "unsupported_grant_type",
+                "invalid_scope"
+            ],
+            "x-enum-varnames": [
+                "InvalidRequest",
+                "InvalidClient",
+                "InvalidGrant",
+                "UnauthorizedClient",
+                "UnsupportedGrantType",
+                "InvalidScope"
+            ]
+        },
         "domain.HTTPEmpty": {
             "type": "object"
+        },
+        "domain.HTTPError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/domain.ErrorCode"
+                },
+                "error_description": {
+                    "type": "string"
+                },
+                "error_uri": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Token": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expired_in": {
+                    "type": "integer"
+                },
+                "scope": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                }
+            }
         }
     }
 }

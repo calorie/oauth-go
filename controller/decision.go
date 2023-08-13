@@ -27,6 +27,7 @@ func NewDecisionController(u *usecase.DecisionUsecase) *DecisionController {
 // @Param       password query string true "password"
 // @Success     302
 // @Header      302 {string} Location "https://client.example.org/cb?code=SplxlOBeZQQYbYS6WxSbIA&state=af0ifjsldkj"
+// @Failure     400 {object} domain.HTTPError
 // @Router      /decision [post]
 func (ac *DecisionController) PostDecision(c *gin.Context) {
 	var r domain.DecisionRequest

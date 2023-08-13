@@ -30,6 +30,7 @@ func NewAuthorizeController(u *usecase.AuthorizeUsecase) *AuthorizeController {
 // @Param       code_challenge        query string true "https://datatracker.ietf.org/doc/html/rfc7636"
 // @Param       code_challenge_method query string true "https://datatracker.ietf.org/doc/html/rfc7636" Enums(S256)
 // @Success     200
+// @Failure     400 {object} domain.HTTPError
 // @Router      /authorize [get]
 func (ac *AuthorizeController) GetAuthorize(c *gin.Context) {
 	var r domain.AuthorizeRequest

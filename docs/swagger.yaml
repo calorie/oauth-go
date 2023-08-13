@@ -1,5 +1,41 @@
 definitions:
+  domain.ErrorCode:
+    enum:
+    - invalid_request
+    - invalid_client
+    - invalid_grant
+    - unauthorized_client
+    - unsupported_grant_type
+    - invalid_scope
+    type: string
+    x-enum-varnames:
+    - InvalidRequest
+    - InvalidClient
+    - InvalidGrant
+    - UnauthorizedClient
+    - UnsupportedGrantType
+    - InvalidScope
   domain.HTTPEmpty:
+    type: object
+  domain.HTTPError:
+    properties:
+      error:
+        $ref: '#/definitions/domain.ErrorCode'
+      error_description:
+        type: string
+      error_uri:
+        type: string
+    type: object
+  domain.Token:
+    properties:
+      access_token:
+        type: string
+      expired_in:
+        type: integer
+      scope:
+        type: string
+      token_type:
+        type: string
     type: object
 info:
   contact: {}
@@ -51,6 +87,10 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
       summary: get authorize
       tags:
       - authorize
@@ -78,9 +118,57 @@ paths:
             Location:
               description: https://client.example.org/cb?code=SplxlOBeZQQYbYS6WxSbIA&state=af0ifjsldkj
               type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
       summary: get decision
       tags:
       - decision
+  /token:
+    post:
+      consumes:
+      - application/json
+      description: post token
+      parameters:
+      - description: Value MUST be set to authorization_code
+        enum:
+        - authorization_code
+        in: query
+        name: grant_type
+        required: true
+        type: string
+      - description: The authorization code received from the authorization server
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: if the redirect_uri parameter was included in the authorization
+          request as described in Section 4.1.1, and their values MUST be identical.
+        in: query
+        name: redirect_uri
+        required: true
+        type: string
+      - description: if the client is not authenticating with the authorization server
+          as described in Section 3.2.1
+        in: query
+        name: client_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Token'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: post token
+      tags:
+      - token
   /v1/health:
     get:
       consumes:

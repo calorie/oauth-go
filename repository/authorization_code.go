@@ -28,3 +28,16 @@ func (r *AuthorizationCodeRepository) CreateAuthorizationCode(code string, userI
 	}
 	return r.db.Create(&ac)
 }
+
+func (r *AuthorizationCodeRepository) FindAuthorizationCode(code string) (*domain.AuthorizationCode, *gorm.DB) {
+	ac := domain.AuthorizationCode{}
+	db := r.db.Where("code = ? AND expired_at < ?", code, time.Now()).First(&ac)
+	return &ac, db
+}
+
+func (r *AuthorizationCodeRepository) DeleteAuthorizationCode(code string) *gorm.DB {
+	ac := domain.AuthorizationCode{
+		Code: code,
+	}
+	return r.db.Delete(&ac)
+}
